@@ -22,11 +22,11 @@ import smile3 from "@/assets/images/smile-3.webp";
 
 // Clinic is fictional: this is a portfolio demo. Phone and e-mail are placeholders.
 export const clinic = {
-  name: "Белая Мята",
+  name: "White Mint",
   tagline: "Стоматология",
   phone: "+7 (999) 000-00-00",
   phoneHref: "tel:+79990000000",
-  email: "hello@belaya-myata.example",
+  email: "hello@white-mint.example",
   address: "Москва, ул. Примерная, 12",
   metro: "м. Тверская, 5 минут пешком",
   hours: [
@@ -34,7 +34,7 @@ export const clinic = {
     { days: "Сб–Вс", time: "10:00–18:00" },
   ],
   license: "Лицензия № ЛО-77-01-000000 от 01.01.2020",
-  legal: "ООО «Белая Мята», ИНН 7700000000",
+  legal: "ООО «Вайт Минт», ИНН 7700000000",
 };
 
 export const nav = [

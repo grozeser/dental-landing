@@ -16,6 +16,15 @@
 - **Анимации при скролле.** Карточки плавно появляются, счётчики «12 000+ пациентов» досчитывают до значения. Если в системе включено «уменьшить движение», анимаций нет.
 - Отзывы — горизонтальная лента на CSS scroll-snap, FAQ — нативные `<details>`. Ни там, ни там JavaScript не нужен.
 
+## Lighthouse
+
+Живой сайт, Lighthouse 12, октябрь 2026:
+
+| | Performance | Accessibility | Best Practices | SEO |
+| --- | --- | --- | --- | --- |
+| Мобильный | 96 | 100 | 100 | 100 |
+| Десктоп | 100 | 100 | 100 | 100 |
+
 ## Стек
 
 Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS 4 · react-hook-form + zod · lucide-react · Vitest · GitHub Actions → GitHub Pages

@@ -22,7 +22,11 @@ export function BeforeAfter() {
       lead="Потяните ползунок, чтобы сравнить состояние зубов до лечения и после."
       className="bg-surface"
     >
-      <div role="tablist" aria-label="Примеры работ" className="flex flex-wrap gap-2">
+      <div
+        role="tablist"
+        aria-label="Примеры работ"
+        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0"
+      >
         {cases.map((item, i) => (
           <button
             key={item.title}
@@ -44,7 +48,7 @@ export function BeforeAfter() {
               setPos(50);
               document.getElementById(`case-tab-${next}`)?.focus();
             }}
-            className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold transition-colors aria-selected:border-teal-700 aria-selected:bg-teal-700 aria-selected:text-white"
+            className="shrink-0 rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors aria-selected:border-teal-700 aria-selected:bg-teal-700 aria-selected:text-white"
           >
             {item.title}
           </button>

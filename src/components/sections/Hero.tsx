@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
+import heroSmall from "@/assets/images/hero-800.webp";
 import heroImg from "@/assets/images/hero.webp";
 import { button } from "@/components/ui/button";
 import { hero } from "@/data/content";
@@ -33,12 +33,17 @@ export function Hero() {
         </div>
 
         <div className="relative">
-          <Image
-            src={heroImg}
-            alt="Врач-стоматолог беседует с пациенткой в светлом кабинете"
-            preload
-            fetchPriority="high"
+          {/* Plain <img>: static export has no image optimizer, so next/image can't build a srcset.
+              The 800px file cuts the mobile LCP image from 141 KB to 31 KB. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={heroImg.src}
+            srcSet={`${heroSmall.src} 800w, ${heroImg.src} 1400w`}
             sizes="(min-width: 1024px) 50vw, 100vw"
+            width={heroImg.width}
+            height={heroImg.height}
+            alt="Врач-стоматолог беседует с пациенткой в светлом кабинете"
+            fetchPriority="high"
             className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-card"
           />
           <p className="absolute bottom-4 left-4 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 text-sm font-semibold shadow-card sm:bottom-6 sm:left-6">

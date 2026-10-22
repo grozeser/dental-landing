@@ -21,7 +21,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md">
       <div className="shell flex h-18 items-center justify-between gap-6">
-        <a href="#top" aria-label={`${clinic.name} — на главную`} onClick={close}>
+        <a href="#top" onClick={close}>
           <Logo />
         </a>
 
@@ -46,9 +46,17 @@ export function Header() {
           </a>
         </div>
 
+        <a
+          href={clinic.phoneHref}
+          aria-label={`Позвонить: ${clinic.phone}`}
+          className="ml-auto grid size-11 place-items-center rounded-full bg-teal-50 text-teal-800 lg:hidden"
+        >
+          <Phone className="size-5" aria-hidden="true" />
+        </a>
+
         <button
           type="button"
-          className="-mr-2 rounded-full p-2 lg:hidden"
+          className="-mr-2 grid size-11 place-items-center rounded-full lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Закрыть меню" : "Открыть меню"}

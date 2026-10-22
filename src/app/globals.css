@@ -33,3 +33,23 @@ body {
 @utility shell {
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
 }
+
+/* Scroll reveal: .reveal-ready is set by RevealObserver, so without JS everything stays visible.
+   The transition lives on .is-visible only: hiding is instant, showing is animated. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-ready [data-reveal]:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  .reveal-ready [data-reveal].is-visible {
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+  .reveal-ready [data-reveal]:nth-child(3n + 2) {
+    transition-delay: 90ms;
+  }
+  .reveal-ready [data-reveal]:nth-child(3n + 3) {
+    transition-delay: 180ms;
+  }
+}

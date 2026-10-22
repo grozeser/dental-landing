@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/` },
   openGraph: { type: "website", locale: "ru_RU", siteName: clinic.name, title, description, url: `${SITE_URL}/` },
   twitter: { card: "summary_large_image" },
+  // The clinic is fictional: keep it out of search so nobody mistakes it for a real dentist.
+  // Link previews (Open Graph) still work. Remove for a real client.
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = { themeColor: "#0f766e" };

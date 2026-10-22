@@ -55,7 +55,7 @@ export function Calculator() {
                     </span>
                   </label>
                   {p.perTooth && n > 0 && (
-                    <div className="ml-8 flex items-center gap-1 rounded-full border border-line sm:ml-0">
+                    <div className="ml-8 flex items-center gap-1 rounded-full border border-field sm:ml-0">
                       <button
                         type="button"
                         onClick={() => set(p.id, n - 1)}

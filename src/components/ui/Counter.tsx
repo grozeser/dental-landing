@@ -32,9 +32,16 @@ export function Counter({ value, suffix = "" }: { value: number; suffix?: string
   }, [value]);
 
   return (
+    // Screen readers get the final number, not every animation frame.
     <span ref={ref} className="tabular-nums">
-      {fmt.format(shown)}
-      {suffix}
+      <span aria-hidden="true">
+        {fmt.format(shown)}
+        {suffix}
+      </span>
+      <span className="sr-only">
+        {fmt.format(value)}
+        {suffix}
+      </span>
     </span>
   );
 }

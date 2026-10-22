@@ -13,7 +13,7 @@ import { maskPhone } from "@/lib/phone";
 import { formatRub } from "@/lib/price";
 
 const field =
-  "mt-1.5 w-full rounded-2xl border border-line bg-white px-4 py-3 text-base outline-none transition-colors focus:border-teal-600 focus:ring-4 focus:ring-teal-600/15 aria-invalid:border-red-600";
+  "mt-1.5 w-full rounded-2xl border border-field bg-white px-4 py-3 text-base outline-none transition-colors focus:border-teal-600 focus:ring-4 focus:ring-teal-600/15 aria-invalid:border-red-600";
 
 const FIELD_ORDER = ["name", "phone", "service", "date", "time", "comment", "consent"] as const;
 
@@ -140,7 +140,7 @@ export function Booking() {
               )}
             </Field>
 
-            <Field label="Комментарий (необязательно)" error={errors.comment?.message} wide>
+            <Field label="Комментарий (необязательно)" error={errors.comment?.message} wide optional>
               {(p) => (
                 <textarea
                   {...p}
@@ -157,6 +157,7 @@ export function Booking() {
                 <input
                   type="checkbox"
                   {...register("consent")}
+                  aria-required="true"
                   aria-invalid={!!errors.consent}
                   aria-describedby={errors.consent ? "consent-error" : undefined}
                   className="mt-0.5 size-5 shrink-0 accent-teal-700"
@@ -186,17 +187,28 @@ type FieldProps = {
   label: string;
   error?: string;
   wide?: boolean;
-  children: (p: { id: string; "aria-invalid": boolean; "aria-describedby"?: string }) => ReactNode;
+  optional?: boolean;
+  children: (p: {
+    id: string;
+    "aria-invalid": boolean;
+    "aria-required": boolean;
+    "aria-describedby"?: string;
+  }) => ReactNode;
 };
 
-function Field({ label, error, wide, children }: FieldProps) {
+function Field({ label, error, wide, optional = false, children }: FieldProps) {
   const id = useId();
   return (
     <div className={wide ? "sm:col-span-2" : ""}>
       <label htmlFor={id} className="text-sm font-semibold">
         {label}
       </label>
-      {children({ id, "aria-invalid": !!error, "aria-describedby": error ? `${id}-error` : undefined })}
+      {children({
+        id,
+        "aria-invalid": !!error,
+        "aria-required": !optional,
+        "aria-describedby": error ? `${id}-error` : undefined,
+      })}
       {error && (
         <p id={`${id}-error`} className="mt-1.5 text-sm text-red-700">
           {error}

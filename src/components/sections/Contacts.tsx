@@ -35,10 +35,10 @@ function MapCard() {
       </div>
       <div className="absolute inset-x-4 bottom-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
         <a href={YANDEX_URL} target="_blank" rel="noopener noreferrer" className={button.secondary}>
-          Открыть в Яндекс Картах
+          Открыть в Яндекс Картах<span className="sr-only"> (в новой вкладке)</span>
         </a>
         <a href={TWOGIS_URL} target="_blank" rel="noopener noreferrer" className={button.secondary}>
-          Открыть в 2ГИС
+          Открыть в 2ГИС<span className="sr-only"> (в новой вкладке)</span>
         </a>
       </div>
     </div>

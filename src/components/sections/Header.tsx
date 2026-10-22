@@ -1,0 +1,86 @@
+"use client";
+
+import { Menu, Phone, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/Logo";
+import { clinic, nav } from "@/data/content";
+
+export function Header() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const close = () => setOpen(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md">
+      <div className="shell flex h-18 items-center justify-between gap-6">
+        <a href="#top" aria-label={`${clinic.name} — на главную`} onClick={close}>
+          <Logo />
+        </a>
+
+        <nav aria-label="Основное меню" className="hidden lg:block">
+          <ul className="flex gap-7 text-sm font-medium">
+            {nav.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className="transition-colors hover:text-teal-700">
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="hidden items-center gap-5 lg:flex">
+          <a href={clinic.phoneHref} className="text-sm font-semibold whitespace-nowrap hover:text-teal-700">
+            {clinic.phone}
+          </a>
+          <a href="#booking" className={button.primary}>
+            Записаться
+          </a>
+        </div>
+
+        <button
+          type="button"
+          className="-mr-2 rounded-full p-2 lg:hidden"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          aria-label={open ? "Закрыть меню" : "Открыть меню"}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X className="size-6" /> : <Menu className="size-6" />}
+        </button>
+      </div>
+
+      {open && (
+        <div id="mobile-menu" className="border-t border-line bg-white lg:hidden">
+          <nav aria-label="Мобильное меню" className="shell py-4">
+            <ul className="divide-y divide-line">
+              {nav.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} onClick={close} className="block py-3 text-lg font-medium">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex flex-col gap-3 pb-2">
+              <a href={clinic.phoneHref} className={button.secondary}>
+                <Phone className="size-4" aria-hidden="true" /> {clinic.phone}
+              </a>
+              <a href="#booking" onClick={close} className={button.primary}>
+                Записаться на приём
+              </a>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}

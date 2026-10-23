@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheckBig, X } from "lucide-react";
-import { useId, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useId, useState, useSyncExternalStore, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { useBooking } from "@/components/BookingProvider";
 import { button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ const noop = () => () => {};
 const useToday = () => useSyncExternalStore(noop, todayISO, () => undefined);
 
 export function Booking() {
-  const { estimate, setEstimate } = useBooking();
+  const { estimate, setEstimate, prefill } = useBooking();
   const [sentTo, setSentTo] = useState<string | null>(null);
   const today = useToday();
   const {
@@ -30,13 +30,19 @@ export function Booking() {
     handleSubmit,
     reset,
     setFocus,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<BookingInput>({
     resolver: zodResolver(bookingSchema),
     shouldFocusError: false, // RHF's own order depends on registration; focus in visual order instead
-
     defaultValues: { name: "", phone: "", service: "", date: "", time: "", comment: "", consent: false },
   });
+
+  // Choices from the quiz or a service card land in the form.
+  useEffect(() => {
+    if (prefill?.service) setValue("service", prefill.service, { shouldValidate: true });
+    if (prefill?.comment) setValue("comment", prefill.comment);
+  }, [prefill, setValue]);
 
   const onSubmit = async (data: BookingInput) => {
     // shortcut: no backend on GitHub Pages, so sending is simulated; plug in Formspree or a Telegram bot here.
@@ -70,7 +76,9 @@ export function Booking() {
               const first = FIELD_ORDER.find((k) => errs[k]);
               if (first) setFocus(first);
             })}
-            noValidate className="grid max-w-3xl gap-5 sm:grid-cols-2">
+            noValidate
+            className="grid max-w-3xl gap-5 sm:grid-cols-2"
+          >
             {estimate && (
               <div className="flex items-start justify-between gap-4 rounded-2xl bg-teal-50 p-5 sm:col-span-2">
                 <p>

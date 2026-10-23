@@ -1,12 +1,20 @@
 import { Quote, Star } from "lucide-react";
+import { ScrollButtons } from "@/components/ui/ScrollButtons";
 import { Section } from "@/components/ui/Section";
-import { reviews } from "@/data/content";
+import { rating, reviews } from "@/data/content";
 
 export function Reviews() {
   return (
-    <Section id="reviews" eyebrow="Отзывы" title="Что говорят пациенты">
-      {/* CSS scroll-snap carousel: swipe on touch, keyboard arrows once focused. No JS. */}
+    <Section
+      id="reviews"
+      eyebrow="Отзывы"
+      title="Что говорят пациенты"
+      lead={`${rating.value} из 5 — средняя оценка по ${rating.count}`}
+      aside={<ScrollButtons target="reviews-list" label="отзывы" />}
+    >
+      {/* CSS scroll-snap carousel: swipe on touch, keyboard arrows once focused; the buttons are an extra. */}
       <ul
+        id="reviews-list"
         tabIndex={0}
         aria-label="Отзывы пациентов, прокручиваются по горизонтали"
         className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto px-4 pb-4 [scrollbar-color:var(--color-teal-200)_transparent] [scrollbar-width:thin] sm:-mx-6 sm:scroll-px-6 sm:px-6"

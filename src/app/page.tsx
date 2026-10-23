@@ -9,20 +9,23 @@ import { Features } from "@/components/sections/Features";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
 import { Hero } from "@/components/sections/Hero";
+import { Quiz } from "@/components/sections/Quiz";
 import { Reviews } from "@/components/sections/Reviews";
 import { Services } from "@/components/sections/Services";
 import { Steps } from "@/components/sections/Steps";
+import { MobileCta } from "@/components/ui/MobileCta";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <main id="main">
-        <Hero />
-        <Features />
-        <Services />
-        <BookingProvider>
+      <BookingProvider>
+        <main id="main">
+          <Hero />
+          <Features />
+          <Services />
+          <Quiz />
           <Calculator />
           <BeforeAfter />
           <Doctors />
@@ -30,10 +33,11 @@ export default function Home() {
           <Reviews />
           <Faq />
           <Booking />
-        </BookingProvider>
-        <Contacts />
-      </main>
+          <Contacts />
+        </main>
+      </BookingProvider>
       <Footer />
+      <MobileCta />
       <RevealObserver />
     </>
   );

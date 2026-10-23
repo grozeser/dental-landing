@@ -3,6 +3,30 @@ import { bookingSchema } from "./booking-schema";
 import { maskPhone } from "./phone";
 import { pluralYears } from "./plural";
 import { calcTotal, monthly } from "./price";
+import { formatSlot, moscowNow, nextSlot } from "./slots";
+
+describe("nextSlot", () => {
+  const MON = 1,
+    FRI = 5,
+    SAT = 6,
+    SUN = 0;
+  it.each([
+    ["Fri 11:58 → today 13:00", FRI, 11 * 60 + 58, "сегодня, 13:00"],
+    ["Mon 7:00, before opening → today 9:00", MON, 7 * 60, "сегодня, 9:00"],
+    ["Mon 19:00 → today 20:00, the last slot", MON, 19 * 60, "сегодня, 20:00"],
+    ["Mon 19:01, too late → tomorrow 9:00", MON, 19 * 60 + 1, "завтра, 9:00"],
+    ["Fri 22:00 → Saturday opens at 10:00", FRI, 22 * 60, "завтра, 10:00"],
+    ["Sat 16:30 → Sunday 10:00", SAT, 16 * 60 + 30, "завтра, 10:00"],
+    ["Sun 16:55 → Monday 9:00", SUN, 16 * 60 + 55, "завтра, 9:00"],
+  ])("%s", (_, day, minutes, expected) => expect(formatSlot(nextSlot(day, minutes))).toBe(expected));
+
+  it("reads Moscow time regardless of the machine time zone", () => {
+    // 08:58 UTC on Friday 23 Oct 2026 is 11:58 in Moscow (UTC+3).
+    expect(moscowNow(new Date("2026-10-23T08:58:00Z"))).toEqual({ day: 5, minutes: 11 * 60 + 58 });
+    // 22:30 UTC on Saturday is already Sunday 01:30 in Moscow.
+    expect(moscowNow(new Date("2026-10-24T22:30:00Z"))).toEqual({ day: 0, minutes: 90 });
+  });
+});
 
 describe("maskPhone", () => {
   it.each([

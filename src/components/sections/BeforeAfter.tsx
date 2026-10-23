@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronsLeftRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/ui/Section";
 import { cases } from "@/data/content";
 
@@ -13,6 +13,34 @@ export function BeforeAfter() {
   const [active, setActive] = useState(0);
   const [pos, setPos] = useState(50);
   const c = cases[active];
+  const frameRef = useRef<HTMLDivElement>(null);
+  const hint = useRef(0);
+
+  // First time the photo is in view, the handle wiggles once to show it can be dragged.
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / 1600, 1);
+          setPos(Math.round(50 + 22 * Math.sin(t * 2 * Math.PI) * (1 - t))); // damped swing back to 50
+          if (t < 1) hint.current = requestAnimationFrame(tick);
+        };
+        hint.current = requestAnimationFrame(tick);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(hint.current);
+    };
+  }, []);
+  const stopHint = () => cancelAnimationFrame(hint.current);
 
   return (
     <Section
@@ -37,6 +65,7 @@ export function BeforeAfter() {
             aria-controls="case-panel"
             tabIndex={i === active ? 0 : -1}
             onClick={() => {
+              stopHint();
               setActive(i);
               setPos(50);
             }}
@@ -56,7 +85,7 @@ export function BeforeAfter() {
       </div>
 
       <div id="case-panel" role="tabpanel" aria-labelledby={`case-tab-${active}`} className="mt-6">
-        <div className="relative aspect-[3/2] overflow-hidden rounded-3xl select-none lg:aspect-video">
+        <div ref={frameRef} className="relative aspect-[3/2] overflow-hidden rounded-3xl select-none lg:aspect-video">
           <Image
             src={c.image}
             alt={`${c.title}: результат лечения`}
@@ -82,7 +111,12 @@ export function BeforeAfter() {
             min={0}
             max={100}
             value={pos}
-            onChange={(e) => setPos(Number(e.target.value))}
+            onPointerDown={stopHint}
+            onKeyDown={stopHint}
+            onChange={(e) => {
+              stopHint();
+              setPos(Number(e.target.value));
+            }}
             aria-label="Сравнение до и после"
             aria-valuetext={`Показано ${pos}% фото «до»`}
             className="peer absolute inset-0 size-full cursor-ew-resize touch-pan-y opacity-0"

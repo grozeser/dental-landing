@@ -6,8 +6,12 @@ import { button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/Logo";
 import { clinic, nav } from "@/data/content";
 
+const navIds = new Set(nav.map((n) => n.href));
+
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -16,10 +20,34 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Scrollspy: the section crossing a thin band in the middle of the screen is "current".
+  // Sections that aren't in the menu (FAQ, quiz…) clear the highlight instead of keeping a stale one.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const href = `#${e.target.id}`;
+          setActive(navIds.has(href) ? href : null);
+        }
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    document.querySelectorAll("main section[id]").forEach((s) => io.observe(s));
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      io.disconnect();
+    };
+  }, []);
+
   const close = () => setOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 border-b bg-white/85 backdrop-blur-md transition-shadow ${scrolled ? "border-transparent shadow-card" : "border-line"}`}
+    >
       <div className="shell flex h-18 items-center justify-between gap-6">
         <a href="#top" onClick={close}>
           <Logo />
@@ -29,7 +57,11 @@ export function Header() {
           <ul className="flex gap-7 text-sm font-medium">
             {nav.map((item) => (
               <li key={item.href}>
-                <a href={item.href} className="transition-colors hover:text-teal-700">
+                <a
+                  href={item.href}
+                  aria-current={active === item.href ? "true" : undefined}
+                  className="relative py-2 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-teal-600 after:transition-transform hover:text-teal-700 hover:after:scale-x-100 aria-[current=true]:text-teal-700 aria-[current=true]:after:scale-x-100"
+                >
                   {item.label}
                 </a>
               </li>
